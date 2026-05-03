@@ -95,7 +95,7 @@ g++ src/main.cpp -o tetris
 ./tetris
 🔄 Quy trình phát triển
 Issue → Branch → Code → Commit → Pull Request → Review → Merge
-📌 Phân công nhiệm vụ
+## 📌 Phân công nhiệm vụ
 Thành viên	Vai trò
 Trần Huỳnh Thiện	Project Manager / Core
 Nguyễn Trần Ngọc Ngọc	Game logic
