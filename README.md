@@ -1,49 +1,33 @@
+🚀 README LEVEL PRO (copy nguyên vào README.md)
 # 🎮 SS004 - Tetris Game Project (Nhóm 9)
 
-## 📌 Giới thiệu
-Đây là đồ án cuối kỳ môn **Kỹ năng nghề nghiệp (SS004)** tại UIT.  
-Nhóm thực hiện xây dựng trò chơi **Tetris** bằng ngôn ngữ C++.
-
-Mục tiêu của dự án:
-- Áp dụng kỹ năng làm việc nhóm
-- Sử dụng Git/GitHub trong phát triển phần mềm
-- Xây dựng một trò chơi hoàn chỉnh từ cơ bản
+<p align="center">
+  <b>Đồ án cuối kỳ môn Kỹ năng nghề nghiệp (SS004) - UIT</b><br>
+  Xây dựng trò chơi Tetris bằng C++ với quy trình làm việc nhóm chuyên nghiệp
+</p>
 
 ---
 
-## 👨‍💻 Thành viên nhóm
+## 📌 Tổng quan dự án
 
-| MSSV | Họ tên |
-|------|------|
-| 23730034 | Nguyễn Trần Ngọc Ngọc |
-| 23730050 | Trần Huỳnh Thiện |
-| 24730179 | Nguyễn Chí Thành |
-| 25730115 | Đào Hoàng Huy |
-| 25730142 | Phạm Hữu Tài |
+Dự án nhằm xây dựng lại trò chơi **Tetris kinh điển** bằng ngôn ngữ C++, đồng thời áp dụng quy trình phát triển phần mềm thực tế:
 
----
+- Làm việc nhóm qua GitHub
+- Quản lý công việc bằng Issues
+- Code theo branch
+- Merge bằng Pull Request
 
-## 🛠 Công nghệ sử dụng
-
-- Ngôn ngữ: **C++**
-- Thư viện:
-  - `<iostream>`
-  - `<conio.h>`
-- Công cụ:
-  - GitHub (quản lý mã nguồn)
-  - Overleaf (viết báo cáo)
-  - Slack (trao đổi nhóm)
+👉 Đây không chỉ là một game, mà là một **mini software project hoàn chỉnh**
 
 ---
 
-## 🎯 Chức năng chính
+## 🧠 Gameplay
 
-- Hiển thị bảng game (board)
-- Khối rơi tự động
-- Di chuyển trái/phải/xuống
-- Xóa dòng (removeLine)
-- Xoay khối (đang phát triển)
-- Tăng tốc độ theo thời gian
+Người chơi điều khiển các khối (Tetromino) rơi xuống bảng:
+
+- Sắp xếp để tạo hàng đầy
+- Hàng đầy sẽ bị xóa
+- Game kết thúc khi khối chạm đỉnh
 
 ---
 
@@ -58,11 +42,63 @@ Mục tiêu của dự án:
 
 ---
 
-## 📂 Cấu trúc thư mục
+## 🧩 Các loại khối
+
+
+I, O, T, S, Z, J, L
+
+
+(📌 Có thể bổ sung hình minh họa sau)
+
+---
+
+## 🛠 Công nghệ sử dụng
+
+| Thành phần | Công nghệ |
+|------|--------|
+| Ngôn ngữ | C++ |
+| Thư viện | iostream, conio.h |
+| Version Control | Git & GitHub |
+| Tài liệu | Overleaf (LaTeX) |
+| Giao tiếp | Slack |
+
+---
+
+## 📂 Cấu trúc project
+
+
+SS004_Tetris_Project_Nhom9/
+│
+├── src/
+│ ├── main.cpp
+│ ├── block.cpp
+│ ├── board.cpp
+│ ├── game.cpp
+│
+├── README.md
+└── .gitignore
+
+
+---
+
+## ⚙️ Cách chạy chương trình
+
+### 🔹 Cách 1: IDE
+
+- Mở project bằng Dev C++ / CodeBlocks
+- Run file `main.cpp`
+
+### 🔹 Cách 2: Terminal
 
 ```bash
-src/
- ├── main.cpp
- ├── block.cpp
- ├── board.cpp
- ├── game.cpp
+g++ src/main.cpp -o tetris
+./tetris
+🔄 Quy trình phát triển
+Issue → Branch → Code → Commit → Pull Request → Review → Merge
+📌 Phân công nhiệm vụ
+Thành viên	Vai trò
+Trần Huỳnh Thiện	Project Manager / Core
+Nguyễn Trần Ngọc Ngọc	Game logic
+Nguyễn Chí Thành	removeLine
+Đào Hoàng Huy	UI/UX
+Phạm Hữu Tài	Rotate + Speed
