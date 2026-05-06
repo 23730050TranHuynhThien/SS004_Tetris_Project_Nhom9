@@ -1,76 +1,82 @@
 #include <iostream>
 #include <conio.h>
+#include <windows.h>
+#include <time.h>
 
 using namespace std;
 #define H 20
 #define W 15
+
+const char BLOCK_CHAR = (char)219;
+const char BORDER_CHAR = (char)178;
+
 char board[H][W] = {};
 
 int x, y, b;
 char blocks[][4][4] ={
-        {{' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '}},
-        {{' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '}},
+        {{' ',BLOCK_CHAR,' ',' '},
+         {' ',BLOCK_CHAR,' ',' '},
+         {' ',BLOCK_CHAR,' ',' '},
+         {' ',BLOCK_CHAR,' ',' '}},
+        {{' ',BLOCK_CHAR,' ',' '},
+         {' ',BLOCK_CHAR,' ',' '},
+         {' ',BLOCK_CHAR,' ',' '},
+         {' ',BLOCK_CHAR,' ',' '}},
         {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
          {' ',' ',' ',' '}},
         {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
          {' ',' ',' ',' '}},
         {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
          {' ',' ',' ',' '}},
         {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
          {' ',' ',' ',' '}},
         {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
          {' ',' ',' ',' '}},
         {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
          {' ',' ',' ',' '}},
         {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
          {' ',' ',' ',' '}},
         {{' ',' ',' ',' '},
-         {'I','I','I','I'},
+         {BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR},
          {' ',' ',' ',' '},
          {' ',' ',' ',' '}},
         {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
          {' ',' ',' ',' '}},
         {{' ',' ',' ',' '},
-         {' ','T',' ',' '},
-         {'T','T','T',' '},
+         {' ',BLOCK_CHAR,' ',' '},
+         {BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR,' '},
          {' ',' ',' ',' '}},
         {{' ',' ',' ',' '},
-         {' ','S','S',' '},
-         {'S','S',' ',' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
+         {BLOCK_CHAR,BLOCK_CHAR,' ',' '},
          {' ',' ',' ',' '}},
         {{' ',' ',' ',' '},
-         {'Z','Z',' ',' '},
-         {' ','Z','Z',' '},
+         {BLOCK_CHAR,BLOCK_CHAR,' ',' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
          {' ',' ',' ',' '}},
         {{' ',' ',' ',' '},
-         {'J',' ',' ',' '},
-         {'J','J','J',' '},
+         {BLOCK_CHAR,' ',' ',' '},
+         {BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR,' '},
          {' ',' ',' ',' '}},
         {{' ',' ',' ',' '},
-         {' ',' ','L',' '},
-         {'L','L','L',' '},
+         {' ',' ',BLOCK_CHAR,' '},
+         {BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR,' '},
          {' ',' ',' ',' '}}
 };
 bool canMove(int dx, int dy){
@@ -99,7 +105,7 @@ void boardDelBlock(){
 void initBoard(){
     for (int i = 0 ; i < H ; i++)
         for (int j = 0 ; j < W ; j++)
-            if (i == 0 || i == H-1 || j ==0 || j == W-1) board[i][j] = '#';
+            if (i == 0 || i == H-1 || j ==0 || j == W-1) board[i][j] = BORDER_CHAR;
             else board[i][j] = ' ';
 }
 void draw(){
