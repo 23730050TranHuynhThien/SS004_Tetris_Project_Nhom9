@@ -17,6 +17,31 @@ char blocks[][4][4] ={
         {{' ',BLOCK_CHAR,' ',' '},
          {' ',BLOCK_CHAR,' ',' '},
          {' ',BLOCK_CHAR,' ',' '},
+         {' ',BLOCK_CHAR,' ',' '}},//I
+        {{' ',' ',' ',' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
+         {' ',' ',' ',' '}}, // O
+        {{' ',' ',' ',' '},
+         {' ',BLOCK_CHAR,' ',' '},
+         {BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR,' '},
+         {' ',' ',' ',' '}}, // T
+        {{' ',' ',' ',' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
+         {BLOCK_CHAR,BLOCK_CHAR,' ',' '},
+         {' ',' ',' ',' '}}, // S
+        {{' ',' ',' ',' '},
+         {BLOCK_CHAR,BLOCK_CHAR,' ',' '},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
+         {' ',' ',' ',' '}}, // Z
+        {{' ',' ',' ',' '},
+         {BLOCK_CHAR,' ',' ',' '},
+         {BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR,' '},
+         {' ',' ',' ',' '}}, // J
+        {{' ',' ',' ',' '},
+         {' ',' ',' ',BLOCK_CHAR},
+         {BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR},
+         {' ',' ',' ',' '}}  // L
          {' ',BLOCK_CHAR,' ',' '}},
         {{' ',BLOCK_CHAR,' ',' '},
          {' ',BLOCK_CHAR,' ',' '},
