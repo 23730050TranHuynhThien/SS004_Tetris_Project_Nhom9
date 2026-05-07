@@ -13,6 +13,7 @@ const char BORDER_CHAR = (char)178;
 char board[H][W] = {};
 
 int x, y, b;
+int current_speed = 500;
 char blocks[][4][4] ={
         {{' ',BLOCK_CHAR,' ',' '},
          {' ',BLOCK_CHAR,' ',' '},
@@ -40,7 +41,7 @@ char blocks[][4][4] ={
          {' ',' ',' ',' '}}, // J
         {{' ',' ',' ',' '},
          {' ',' ',' ',BLOCK_CHAR},
-         {BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR},
+         {' ',BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR},
          {' ',' ',' ',' '}}  // L
 };
 bool canMove(int dx, int dy){
@@ -73,20 +74,27 @@ void initBoard(){
             else board[i][j] = ' ';
 }
 void draw(){
-    system("cls");
+    //system("cls");
+    COORD cursorPosition; cursorPosition.X = 0; cursorPosition.Y = 0;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 
     for (int i = 0 ; i < H ; i++, cout<<endl)
-        for (int j = 0 ; j < W ; j++) cout<<board[i][j];
+        for (int j = 0 ; j < W ; j++) cout << board[i][j];
 }
 void removeLine(){
     int i, j;
     for(i = H-2; i > 0; i--){
-        for(j = 0; j < W ; j++)
+        for(j = 1; j < W - 1; j++)
             if (board[i][j] == ' ') break;
-        if(j == W){
-            for(int ii = i; ii > 0; ii--)
-                for(int jj = 0; jj < W; jj++)
+        if(j == W - 1){
+            for(int ii = i; ii > 1; ii--)
+                for(int jj = 1; jj < W - 1; jj++)
                 board[ii][jj] = board[ii-1][jj];
+            for(int jj = 1; jj < W - 1; jj++)
+                board[1][jj] = ' ';
+
+            if (current_speed > 100) current_speed -= 25;
+
             i++;
             draw();
             _sleep(200);
@@ -99,6 +107,12 @@ int main()
     srand(time(0));
     x = 5; y = 0; b = rand()%7;
     initBoard();
+
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    cursorInfo.bVisible = false;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+
     while (1){
         boardDelBlock();
         if (kbhit()){
@@ -116,7 +130,7 @@ int main()
         }
         block2Board();
         draw();
-        _sleep(500);
+        _sleep(current_speed);
     }
     return 0;
 }
