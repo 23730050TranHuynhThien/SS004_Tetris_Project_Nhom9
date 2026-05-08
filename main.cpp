@@ -17,7 +17,9 @@ char board[H][W] = {};
 
 // Vị trí hiện tại của block
 int x, y, b;
-int current_speed = 500; // Tốc độ rơi hiện tại của block
+int current_speed = 500;     // Tốc độ rơi hiện tại của block
+int score = 0;               // Điểm số người chơi
+int total_lines = 0;        // Tổng số dòng đã xóa
 
 //CLASS BLOCK
 // Quản lý dữ liệu và thao tác của từng khối Tetris
@@ -175,12 +177,19 @@ void initBoard(){
 
 // Vẽ board game lên màn hình console
 void draw(){
-    //system("cls");  // Di chuyển con trỏ console về góc trên bên trái
-    COORD cursorPosition; cursorPosition.X = 0; cursorPosition.Y = 0;
+    // Di chuyển con trỏ console về góc trên bên trái
+    COORD cursorPosition; 
+    cursorPosition.X = 0; 
+    cursorPosition.Y = 0;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 
-    for (int i = 0 ; i < H ; i++, cout<<endl)
-        for (int j = 0 ; j < W ; j++) cout << board[i][j];
+    for (int i = 0 ; i < H ; i++, cout << endl)
+        for (int j = 0 ; j < W ; j++) 
+            cout << board[i][j];
+
+    cout << endl;
+    cout << "Score: " << score << " | Lines: " << total_lines << " | Speed: " << current_speed << "ms" << endl;
+    cout << "Controls: A/D move | W rotate | X down | Q quit" << endl;
 }
 
 // Hàm xóa dòng đầy và tăng tốc độ game
@@ -196,6 +205,8 @@ void removeLine(){
             for(int jj = 1; jj < W - 1; jj++)
                 board[1][jj] = ' ';
 // Tăng tốc độ game sau khi xóa dòng
+            score += 100;
+            total_lines++;
             if (current_speed > 100) current_speed -= 25;
 
             i++;
