@@ -200,6 +200,7 @@ int main()
             if (c == 'a' && canMove(-1,0)) x--;
             if (c == 'd' && canMove( 1,0)) x++;
             if (c == 'x' && canMove( 0,1)) y++;
+            if (c == 'w') blocks[b].rotate();
             if (c == 'q') break;
         }
         if (canMove(0,1)) y++;
