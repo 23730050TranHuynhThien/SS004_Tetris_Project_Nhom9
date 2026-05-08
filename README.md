@@ -1,104 +1,205 @@
-🚀 README LEVEL PRO (copy nguyên vào README.md)
-# 🎮 SS004 - Tetris Game Project (Nhóm 9)
+# 🎮 SS004 - TETRIS GAME PROJECT (NHÓM 9)
 
-<p align="center">
-  <b>Đồ án cuối kỳ môn Kỹ năng nghề nghiệp (SS004) - UIT</b><br>
-  Xây dựng trò chơi Tetris bằng C++ với quy trình làm việc nhóm chuyên nghiệp
-</p>
+<div align="center">
 
----
+![C++](https://img.shields.io/badge/C%2B%2B-17-blue?style=for-the-badge\&logo=c%2B%2B)
+![UIT](https://img.shields.io/badge/UIT-SS004-success?style=for-the-badge)
+![GitHub](https://img.shields.io/badge/Git-Workflow-orange?style=for-the-badge\&logo=git)
+![Overleaf](https://img.shields.io/badge/LaTeX-Overleaf-green?style=for-the-badge\&logo=overleaf)
 
-## 📌 Tổng quan dự án
+## 🕹️ ĐỒ ÁN CUỐI KỲ MÔN KỸ NĂNG NGHỀ NGHIỆP (SS004)
 
-Dự án nhằm xây dựng lại trò chơi **Tetris kinh điển** bằng ngôn ngữ C++, đồng thời áp dụng quy trình phát triển phần mềm thực tế:
+### Xây dựng trò chơi Tetris bằng C++ kết hợp quy trình làm việc nhóm chuyên nghiệp
 
-- Làm việc nhóm qua GitHub
-- Quản lý công việc bằng Issues
-- Code theo branch
-- Merge bằng Pull Request
-
-👉 Đây không chỉ là một game, mà là một **mini software project hoàn chỉnh**
+</div>
 
 ---
 
-## 🧠 Gameplay
+# 📌 Giới thiệu dự án
 
-Người chơi điều khiển các khối (Tetromino) rơi xuống bảng:
+Dự án được thực hiện nhằm xây dựng lại trò chơi **Tetris cổ điển** bằng ngôn ngữ **C++**, đồng thời áp dụng đầy đủ quy trình làm việc nhóm trong phát triển phần mềm thực tế.
 
-- Sắp xếp để tạo hàng đầy
-- Hàng đầy sẽ bị xóa
-- Game kết thúc khi khối chạm đỉnh
+Không chỉ tập trung vào gameplay, nhóm còn triển khai:
 
----
+* 📂 Quản lý mã nguồn bằng GitHub
+* 🌿 Làm việc theo branch
+* 🔀 Merge code bằng Pull Request
+* 📋 Quản lý task bằng GitHub Issues
+* 💬 Trao đổi công việc qua Slack
+* 📝 Viết báo cáo bằng LaTeX trên Overleaf
 
-## 🎮 Điều khiển
-
-| Phím | Chức năng |
-|------|----------|
-| A | Di chuyển trái |
-| D | Di chuyển phải |
-| X | Rơi nhanh |
-| Q | Thoát game |
+👉 Đây không chỉ là một game console đơn giản mà còn là một mô hình mini software project hoàn chỉnh.
 
 ---
 
-## 🧩 Các loại khối
+# 🎯 Mục tiêu dự án
 
-
-I, O, T, S, Z, J, L
-
-
-(📌 Có thể bổ sung hình minh họa sau)
-
----
-
-## 🛠 Công nghệ sử dụng
-
-| Thành phần | Công nghệ |
-|------|--------|
-| Ngôn ngữ | C++ |
-| Thư viện | iostream, conio.h |
-| Version Control | Git & GitHub |
-| Tài liệu | Overleaf (LaTeX) |
-| Giao tiếp | Slack |
+* Xây dựng game Tetris có thể chơi được trên console
+* Áp dụng OOP (Object Oriented Programming)
+* Thực hành kỹ năng teamwork
+* Làm quen quy trình Git workflow
+* Rèn luyện quản lý task và phân chia công việc
+* Hoàn thiện kỹ năng viết tài liệu kỹ thuật
 
 ---
 
-## 📂 Cấu trúc project
+# 🧩 Gameplay
 
+Người chơi sẽ điều khiển các khối Tetromino rơi từ trên xuống.
 
-SS004_Tetris_Project_Nhom9/
+🎮 Nhiệm vụ:
+
+* Sắp xếp các block thành hàng ngang hoàn chỉnh
+* Hàng đầy sẽ tự động bị xóa
+* Tốc độ game tăng dần theo thời gian
+* Game kết thúc khi block chạm đỉnh board
+
+---
+
+# 🎮 Điều khiển
+
+| Phím | Chức năng           |
+| ---- | ------------------- |
+| A    | Di chuyển sang trái |
+| D    | Di chuyển sang phải |
+| X    | Rơi nhanh           |
+| W    | Xoay block          |
+| Q    | Thoát game          |
+
+---
+
+# 🧱 Các tính năng chính
+
+## ✅ Gameplay cơ bản
+
+* Block rơi tự động
+* Random block
+* Va chạm với tường
+* Va chạm block
+
+## ✅ Xóa hàng
+
+* Tự động kiểm tra hàng đầy
+* Xóa line
+* Dồn block xuống dưới
+
+## ✅ Tăng độ khó
+
+* Tăng tốc độ game sau mỗi lần xóa line
+
+## ✅ OOP
+
+* Sử dụng class `Block`
+* Quản lý dữ liệu block bằng object
+
+## ✅ Git Workflow
+
+* Làm việc theo branch
+* Pull Request
+* Merge code
+* Commit history
+
+---
+
+# 🏗️ Cấu trúc dự án
+
+```bash
+SS004_Tetris_Project_Nhom9
 │
 ├── src/
-│ ├── main.cpp
-│ ├── block.cpp
-│ ├── board.cpp
-│ ├── game.cpp
+│   ├── main.cpp
+│   └── block.cpp
 │
 ├── README.md
 └── .gitignore
-
+```
 
 ---
 
-## ⚙️ Cách chạy chương trình
+# 👥 Thành viên nhóm
 
-### 🔹 Cách 1: IDE
+| Thành viên            | Vai trò                          |
+| --------------------- | -------------------------------- |
+| Trần Huỳnh Thiện      | Project Manager / Gameplay Logic |
+| Đào Hoàng Huy         | Base Game Structure              |
+| Nguyễn Trần Ngọc Ngọc | UI Board / Block Design          |
 
-- Mở project bằng Dev C++ / CodeBlocks
-- Run file `main.cpp`
+---
 
-### 🔹 Cách 2: Terminal
+# 🔧 Công nghệ sử dụng
 
-```bash
-g++ src/main.cpp -o tetris
-./tetris
-🔄 Quy trình phát triển
-Issue → Branch → Code → Commit → Pull Request → Review → Merge
-## 📌 Phân công nhiệm vụ
-Thành viên	Vai trò
-Trần Huỳnh Thiện	Project Manager / Core
-Nguyễn Trần Ngọc Ngọc	Game logic
-Nguyễn Chí Thành	removeLine
-Đào Hoàng Huy	UI/UX
-Phạm Hữu Tài	Rotate + Speed
+| Công cụ       | Mục đích           |
+| ------------- | ------------------ |
+| C++           | Lập trình game     |
+| GitHub        | Quản lý mã nguồn   |
+| Git Branch    | Làm việc song song |
+| GitHub Issues | Quản lý task       |
+| Slack         | Trao đổi nhóm      |
+| Overleaf      | Viết báo cáo LaTeX |
+
+---
+
+# 📈 Quy trình làm việc nhóm
+
+Nhóm áp dụng mô hình workflow thực tế:
+
+```text
+Issue → Branch → Coding → Commit → Pull Request → Review → Merge
+```
+
+Mỗi thành viên:
+
+* nhận task riêng
+* code trên branch riêng
+* submit Pull Request
+* review chéo trước khi merge vào main
+
+---
+
+# 🚀 Hướng phát triển
+
+Trong tương lai, game có thể mở rộng thêm:
+
+* 🔊 Âm thanh
+* 🎨 Theme màu sắc
+* 🏆 High score
+* 💾 Lưu điểm bằng file/database
+* 🌐 Multiplayer local
+* ✨ Hiệu ứng animation
+
+---
+
+# 📚 Báo cáo dự án
+
+Báo cáo được viết bằng:
+
+* LaTeX
+* Overleaf
+* PDF duy nhất theo yêu cầu môn học
+
+Bao gồm:
+
+* Hợp đồng nhóm
+* Gameplay guide
+* Technical document
+* Team workflow
+* Kỹ năng áp dụng
+* Đánh giá thực hiện hợp đồng
+
+---
+
+# 🏫 Thông tin môn học
+
+* Môn học: Kỹ năng nghề nghiệp (SS004)
+* Trường: Đại học Công nghệ Thông tin – ĐHQG TP.HCM
+* Giảng viên: [toannv@uit.edu.vn](mailto:toannv@uit.edu.vn)
+
+---
+
+<div align="center">
+
+## ⭐ THANK YOU FOR VISITING OUR PROJECT ⭐
+
+### 🎮 “Simple gameplay — Real teamwork experience”
+
+</div>
