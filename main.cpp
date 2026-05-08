@@ -14,35 +14,54 @@ char board[H][W] = {};
 
 int x, y, b;
 int current_speed = 500;
-char blocks[][4][4] ={
-        {{' ',BLOCK_CHAR,' ',' '},
-         {' ',BLOCK_CHAR,' ',' '},
-         {' ',BLOCK_CHAR,' ',' '},
-         {' ',BLOCK_CHAR,' ',' '}},//I
-        {{' ',' ',' ',' '},
-         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
-         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
-         {' ',' ',' ',' '}}, // O
-        {{' ',' ',' ',' '},
-         {' ',BLOCK_CHAR,' ',' '},
-         {BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR,' '},
-         {' ',' ',' ',' '}}, // T
-        {{' ',' ',' ',' '},
-         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
-         {BLOCK_CHAR,BLOCK_CHAR,' ',' '},
-         {' ',' ',' ',' '}}, // S
-        {{' ',' ',' ',' '},
-         {BLOCK_CHAR,BLOCK_CHAR,' ',' '},
-         {' ',BLOCK_CHAR,BLOCK_CHAR,' '},
-         {' ',' ',' ',' '}}, // Z
-        {{' ',' ',' ',' '},
-         {BLOCK_CHAR,' ',' ',' '},
-         {BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR,' '},
-         {' ',' ',' ',' '}}, // J
-        {{' ',' ',' ',' '},
-         {' ',' ',' ',BLOCK_CHAR},
-         {' ',BLOCK_CHAR,BLOCK_CHAR,BLOCK_CHAR},
-         {' ',' ',' ',' '}}  // L
+class Block {
+private:
+    char shape[4][4];
+
+public:
+    Block() {
+        clear();
+    }
+
+    Block(char input[4][4]) {
+        setShape(input);
+    }
+
+    void clear() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                shape[i][j] = ' ';
+            }
+        }
+    }
+
+    void setShape(char input[4][4]) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                shape[i][j] = input[i][j];
+            }
+        }
+    }
+
+    char getCell(int i, int j) {
+        return shape[i][j];
+    }
+
+    void rotate() {
+        char temp[4][4];
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                temp[j][3 - i] = shape[i][j];
+            }
+        }
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                shape[i][j] = temp[i][j];
+            }
+        }
+    }
 };
 bool canMove(int dx, int dy){
     for (int i = 0; i < 4; i++ )
