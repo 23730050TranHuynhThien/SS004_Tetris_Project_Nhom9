@@ -63,10 +63,69 @@ public:
         }
     }
 };
+Block blocks[7];
+void initBlocks() {
+    char I[4][4] = {
+        {' ', BLOCK_CHAR, ' ', ' '},
+        {' ', BLOCK_CHAR, ' ', ' '},
+        {' ', BLOCK_CHAR, ' ', ' '},
+        {' ', BLOCK_CHAR, ' ', ' '}
+    };
+
+    char O[4][4] = {
+        {' ', ' ', ' ', ' '},
+        {' ', BLOCK_CHAR, BLOCK_CHAR, ' '},
+        {' ', BLOCK_CHAR, BLOCK_CHAR, ' '},
+        {' ', ' ', ' ', ' '}
+    };
+
+    char T[4][4] = {
+        {' ', ' ', ' ', ' '},
+        {' ', BLOCK_CHAR, ' ', ' '},
+        {BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, ' '},
+        {' ', ' ', ' ', ' '}
+    };
+
+    char S[4][4] = {
+        {' ', ' ', ' ', ' '},
+        {' ', BLOCK_CHAR, BLOCK_CHAR, ' '},
+        {BLOCK_CHAR, BLOCK_CHAR, ' ', ' '},
+        {' ', ' ', ' ', ' '}
+    };
+
+    char Z[4][4] = {
+        {' ', ' ', ' ', ' '},
+        {BLOCK_CHAR, BLOCK_CHAR, ' ', ' '},
+        {' ', BLOCK_CHAR, BLOCK_CHAR, ' '},
+        {' ', ' ', ' ', ' '}
+    };
+
+    char J[4][4] = {
+        {' ', ' ', ' ', ' '},
+        {BLOCK_CHAR, ' ', ' ', ' '},
+        {BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, ' '},
+        {' ', ' ', ' ', ' '}
+    };
+
+    char L[4][4] = {
+        {' ', ' ', ' ', ' '},
+        {' ', ' ', BLOCK_CHAR, ' '},
+        {BLOCK_CHAR, BLOCK_CHAR, BLOCK_CHAR, ' '},
+        {' ', ' ', ' ', ' '}
+    };
+
+    blocks[0].setShape(I);
+    blocks[1].setShape(O);
+    blocks[2].setShape(T);
+    blocks[3].setShape(S);
+    blocks[4].setShape(Z);
+    blocks[5].setShape(J);
+    blocks[6].setShape(L);
+}
 bool canMove(int dx, int dy){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (blocks[b][i][j] != ' ') {
+            if (blocks[b].getCell(i, j) != ' ') {
                 int xt = x + j + dx;
                 int yt = y + i + dy;
                 if (xt < 1 || xt >= W-1 || yt >= H-1 ) return false;
@@ -77,13 +136,13 @@ bool canMove(int dx, int dy){
 void block2Board(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (blocks[b][i][j] != ' ')
-                board[y+i][x+j] = blocks[b][i][j];
+            if (blocks[b].getCell(i, j) != ' ')
+                board[y+i][x+j] = blocks[b].getCell(i, j);
 }
 void boardDelBlock(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (blocks[b][i][j] != ' ')
+            if (blocks[b].getCell(i, j) != ' ')
                 board[y+i][x+j] = ' ';
 }
 void initBoard(){
@@ -124,6 +183,8 @@ void removeLine(){
 int main()
 {
     srand(time(0));
+    initBlocks();
+    
     x = 5; y = 0; b = rand()%7;
     initBoard();
 
