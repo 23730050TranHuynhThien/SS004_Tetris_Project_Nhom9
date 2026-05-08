@@ -4,21 +4,29 @@
 #include <time.h>
 
 using namespace std;
+// Kích thước board game
 #define H 20
 #define W 15
 
+// Ký tự hiển thị block và viền
 const char BLOCK_CHAR = (char)219;
 const char BORDER_CHAR = (char)178;
 
+// Mảng lưu trạng thái board game
 char board[H][W] = {};
 
+// Vị trí hiện tại của block
 int x, y, b;
-int current_speed = 500;
+int current_speed = 500; // Tốc độ rơi hiện tại của block
+
+//CLASS BLOCK
+// Quản lý dữ liệu và thao tác của từng khối Tetris
 class Block {
 private:
     char shape[4][4];
 
 public:
+// Constructor mặc định
     Block() {
         clear();
     }
@@ -27,6 +35,7 @@ public:
         setShape(input);
     }
 
+// Xóa toàn bộ dữ liệu block
     void clear() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -35,6 +44,7 @@ public:
         }
     }
 
+// Gán hình dạng cho block
     void setShape(char input[4][4]) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -43,10 +53,12 @@ public:
         }
     }
 
+// Lấy giá trị tại vị trí (i, j) của block
     char getCell(int i, int j) {
         return shape[i][j];
     }
 
+// Hàm xoay block theo chiều kim đồng hồ
     void rotate() {
         char temp[4][4];
 
@@ -63,6 +75,8 @@ public:
         }
     }
 };
+
+// Khởi tạo 7 loại block Tetris
 Block blocks[7];
 void initBlocks() {
     char I[4][4] = {
@@ -122,43 +136,54 @@ void initBlocks() {
     blocks[5].setShape(J);
     blocks[6].setShape(L);
 }
+
+// Kiểm tra block có thể di chuyển hay không
 bool canMove(int dx, int dy){
-    for (int i = 0; i < 4; i++ )
+    for (int i = 0; i < 4; i++ )     
         for (int j = 0; j < 4; j++ )
             if (blocks[b].getCell(i, j) != ' ') {
                 int xt = x + j + dx;
-                int yt = y + i + dy;
+                int yt = y + i + dy;         // Kiểm tra va chạm với tường hoặc block khác
                 if (xt < 1 || xt >= W-1 || yt >= H-1 ) return false;
                 if (board[yt][xt] != ' ') return false;
             }
     return true;
 }
+// Ghi block hiện tại lên board
 void block2Board(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
             if (blocks[b].getCell(i, j) != ' ')
                 board[y+i][x+j] = blocks[b].getCell(i, j);
 }
+
+// Xóa block hiện tại khỏi board
 void boardDelBlock(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
             if (blocks[b].getCell(i, j) != ' ')
                 board[y+i][x+j] = ' ';
 }
+
+// Khởi tạo board game và viền
 void initBoard(){
     for (int i = 0 ; i < H ; i++)
         for (int j = 0 ; j < W ; j++)
             if (i == 0 || i == H-1 || j ==0 || j == W-1) board[i][j] = BORDER_CHAR;
             else board[i][j] = ' ';
 }
+
+// Vẽ board game lên màn hình console
 void draw(){
-    //system("cls");
+    //system("cls");  // Di chuyển con trỏ console về góc trên bên trái
     COORD cursorPosition; cursorPosition.X = 0; cursorPosition.Y = 0;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 
     for (int i = 0 ; i < H ; i++, cout<<endl)
         for (int j = 0 ; j < W ; j++) cout << board[i][j];
 }
+
+// Hàm xóa dòng đầy và tăng tốc độ game
 void removeLine(){
     int i, j;
     for(i = H-2; i > 0; i--){
@@ -170,7 +195,7 @@ void removeLine(){
                 board[ii][jj] = board[ii-1][jj];
             for(int jj = 1; jj < W - 1; jj++)
                 board[1][jj] = ' ';
-
+// Tăng tốc độ game sau khi xóa dòng
             if (current_speed > 100) current_speed -= 25;
 
             i++;
@@ -182,9 +207,9 @@ void removeLine(){
 
 int main()
 {
-    srand(time(0));
-    initBlocks();
-    
+    srand(time(0));  // Khởi tạo ngẫu nhiên
+    initBlocks();    // Khởi tạo các block Tetris
+    // Ẩn con trỏ console
     x = 5; y = 0; b = rand()%7;
     initBoard();
 
@@ -193,15 +218,16 @@ int main()
     cursorInfo.bVisible = false;
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 
+    //GAME LOOP
     while (1){
         boardDelBlock();
         if (kbhit()){
             char c = getch();
-        
+        // Điều khiển block bằng bàn phím
             if (c == 'a' && canMove(-1,0)) x--;
             if (c == 'd' && canMove( 1,0)) x++;
             if (c == 'x' && canMove( 0,1)) y++;
-        
+        // Xoay block khi nhấn phím W
             if (c == 'w') {
                 blocks[b].rotate();
             }
@@ -209,6 +235,7 @@ int main()
             if (c == 'q') break;
         }
         if (canMove(0,1)) y++;
+        // Khi block không thể rơi tiếp
         else{
             block2Board();
             removeLine();
