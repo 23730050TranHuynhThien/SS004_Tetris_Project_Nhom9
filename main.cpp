@@ -2,11 +2,12 @@
 #include <conio.h>
 #include <windows.h>
 #include <time.h>
+#include <cctype>
 
 using namespace std;
 // Kích thước board game
-#define H 20
-#define W 15
+#define H 25
+#define W 20
 
 // Ký tự hiển thị block và viền
 const char BLOCK_CHAR = (char)219;
@@ -146,7 +147,7 @@ bool canMove(int dx, int dy){
             if (blocks[b].getCell(i, j) != ' ') {
                 int xt = x + j + dx;
                 int yt = y + i + dy;         // Kiểm tra va chạm với tường hoặc block khác
-                if (xt < 1 || xt >= W-1 || yt >= H-1 ) return false;
+                if (xt < 1 || xt >= W-1 || yt < 1 || yt >= H-1 ) return false;
                 if (board[yt][xt] != ' ') return false;
             }
     return true;
@@ -156,7 +157,12 @@ void block2Board(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
             if (blocks[b].getCell(i, j) != ' ')
-                board[y+i][x+j] = blocks[b].getCell(i, j);
+            {
+                int yi = y + i;
+                int xj = x + j;
+                if (yi >= 1 && yi < H-1 && xj >= 1 && xj < W-1)
+                    board[yi][xj] = blocks[b].getCell(i, j);
+            }
 }
 
 // Xóa block hiện tại khỏi board
@@ -164,7 +170,12 @@ void boardDelBlock(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
             if (blocks[b].getCell(i, j) != ' ')
-                board[y+i][x+j] = ' ';
+            {
+                int yi = y + i;
+                int xj = x + j;
+                if (yi >= 1 && yi < H-1 && xj >= 1 && xj < W-1)
+                    board[yi][xj] = ' ';
+            }
 }
 
 // Khởi tạo board game và viền
@@ -211,9 +222,22 @@ void removeLine(){
 
             i++;
             draw();
-            _sleep(200);
+                Sleep(200);
         }
     }
+}
+
+// Thêm tính năng endgame
+void endGame() {
+    system("cls"); // Xóa màn hình
+    cout << "==============================" << endl;
+    cout << "         GAME OVER            " << endl;
+    cout << "==============================" << endl;
+    cout << "Final Score : " << score << endl;
+    cout << "Total Lines : " << total_lines << endl;
+    cout << "Thanks for playing!" << endl;
+    cout << "Press any key to exit..." << endl;
+    getch(); // chờ người chơi nhấn phím
 }
 
 int main()
@@ -221,7 +245,7 @@ int main()
     srand(time(0));  // Khởi tạo ngẫu nhiên
     initBlocks();    // Khởi tạo các block Tetris
     // Ẩn con trỏ console
-    x = 5; y = 0; b = rand()%7;
+    x = 5; y = 1; b = rand()%7;
     initBoard();
 
     CONSOLE_CURSOR_INFO cursorInfo;
@@ -234,15 +258,22 @@ int main()
         boardDelBlock();
         if (kbhit()){
             char c = getch();
+            c = (char)tolower((unsigned char)c);
         // Điều khiển block bằng bàn phím
             if (c == 'a' && canMove(-1,0)) x--;
             if (c == 'd' && canMove( 1,0)) x++;
             if (c == 'x' && canMove( 0,1)) y++;
-        // Xoay block khi nhấn phím W
+        // Xoay block khi nhấn phím W (xoay tạm, rollback nếu va chạm)
             if (c == 'w') {
                 blocks[b].rotate();
+                if (!canMove(0,0)){
+                    // revert
+                    blocks[b].rotate();
+                    blocks[b].rotate();
+                    blocks[b].rotate();
+                }
             }
-        
+
             if (c == 'q') break;
         }
         if (canMove(0,1)) y++;
@@ -250,11 +281,15 @@ int main()
         else{
             block2Board();
             removeLine();
-            x = 5; y = 0; b = rand()%7;
+            x = 5; y = 1; b = rand()%7;
+            if (!canMove(0,0)) {
+                endGame();
+                break;
+            }
         }
         block2Board();
         draw();
-        _sleep(current_speed);
+            Sleep(current_speed);
     }
     return 0;
 }
