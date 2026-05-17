@@ -18,6 +18,7 @@ char board[H][W] = {};
 
 // Vị trí hiện tại của block
 int x, y, b;
+int nextBlock;
 int current_speed = 500;     // Tốc độ rơi hiện tại của block
 int score = 0;               // Điểm số người chơi
 int total_lines = 0;        // Tổng số dòng đã xóa
@@ -142,7 +143,7 @@ void initBlocks() {
 
 // Kiểm tra block có thể di chuyển hay không
 bool canMove(int dx, int dy){
-    for (int i = 0; i < 4; i++ )     
+    for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
             if (blocks[b].getCell(i, j) != ' ') {
                 int xt = x + j + dx;
@@ -185,22 +186,49 @@ void initBoard(){
             if (i == 0 || i == H-1 || j ==0 || j == W-1) board[i][j] = BORDER_CHAR;
             else board[i][j] = ' ';
 }
+void gotoxy(int x, int y) {
+    COORD c;
+    c.X = x;
+    c.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
+}
+// Preview Next Block
+void drawNextBlock() {
+
+    gotoxy(W + 5, 2);
+    cout << "NEXT BLOCK";
+
+    for (int i = 0; i < 4; i++) {
+
+        gotoxy(W + 5, 4 + i);
+
+        for (int j = 0; j < 4; j++) {
+            cout << blocks[nextBlock].getCell(i, j);
+        }
+    }
+}
+
 
 // Vẽ board game lên màn hình console
 void draw(){
     // Di chuyển con trỏ console về góc trên bên trái
-    COORD cursorPosition; 
-    cursorPosition.X = 0; 
+    COORD cursorPosition;
+    cursorPosition.X = 0;
     cursorPosition.Y = 0;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 
     for (int i = 0 ; i < H ; i++, cout << endl)
-        for (int j = 0 ; j < W ; j++) 
+        for (int j = 0 ; j < W ; j++)
             cout << board[i][j];
 
-    cout << endl;
-    cout << "Score: " << score << " | Lines: " << total_lines << " | Speed: " << current_speed << "ms" << endl;
-    cout << "Controls: A/D move | W rotate | X down | Q quit" << endl;
+    gotoxy(0, H + 1);
+    cout << "Score: " << score
+     << " | Lines: " << total_lines
+     << " | Speed: " << current_speed << "ms     ";
+
+    gotoxy(0, H + 2);
+    cout << "Controls: A/D move | W rotate | X down | Q quit   ";
+    drawNextBlock();
 }
 
 // Hàm xóa dòng đầy và tăng tốc độ game
@@ -239,13 +267,13 @@ void endGame() {
     cout << "Press any key to exit..." << endl;
     getch(); // chờ người chơi nhấn phím
 }
-
 int main()
 {
     srand(time(0));  // Khởi tạo ngẫu nhiên
     initBlocks();    // Khởi tạo các block Tetris
     // Ẩn con trỏ console
-    x = 5; y = 1; b = rand()%7;
+    x = W / 2 - 2; y = 1; b = rand()%7;
+    nextBlock = rand() % 7;
     initBoard();
 
     CONSOLE_CURSOR_INFO cursorInfo;
@@ -281,7 +309,10 @@ int main()
         else{
             block2Board();
             removeLine();
-            x = 5; y = 1; b = rand()%7;
+            x = W / 2 - 2;
+            y = 1;
+            b = nextBlock;
+            nextBlock = rand() % 7;
             if (!canMove(0,0)) {
                 endGame();
                 break;
