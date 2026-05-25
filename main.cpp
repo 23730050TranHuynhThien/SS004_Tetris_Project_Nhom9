@@ -20,6 +20,7 @@ char board[H][W] = {};
 int x, y, b;
 int nextBlock;
 int current_speed = 500;     // Tốc độ rơi hiện tại của block
+bool wPressed = false;      // Biến chống spam xoay block
 int score = 0;               // Điểm số người chơi
 int total_lines = 0;        // Tổng số dòng đã xóa
 
@@ -284,32 +285,50 @@ int main()
     //GAME LOOP
     while (1){
         boardDelBlock();
-        // Điều khiển block bằng bàn phím
-            if (GetAsyncKeyState('A') & 0x8000) {
-                if (canMove(-1, 0)) x--;
-            }
-            
-            if (GetAsyncKeyState('D') & 0x8000) {
-                if (canMove(1, 0)) x++;
-            }
-            
-            if (GetAsyncKeyState('X') & 0x8000) {
-                if (canMove(0, 1)) y++;
-            }
-            
-            if (GetAsyncKeyState('W') & 0x8000) {
+        // Điều khiển block bằng bàn phím realtime
+        // Di chuyển sang trái
+        if (GetAsyncKeyState('A') & 0x8000) {
+            if (canMove(-1, 0)) x--;
+        }
+        
+        // Di chuyển sang phải
+        if (GetAsyncKeyState('D') & 0x8000) {
+            if (canMove(1, 0)) x++;
+        }
+        
+        // Làm block rơi nhanh hơn
+        if (GetAsyncKeyState('X') & 0x8000) {
+            if (canMove(0, 1)) y++;
+        }
+        
+        // Xoay block
+        if (GetAsyncKeyState('W') & 0x8000) {
+        
+            // Chỉ xoay 1 lần cho mỗi lần nhấn
+            if (!wPressed) {
+        
                 blocks[b].rotate();
-            
+        
+                // Nếu xoay bị đụng tường hoặc block khác
+                // thì xoay ngược lại để tránh lỗi
                 if (!canMove(0, 0)) {
                     blocks[b].rotate();
                     blocks[b].rotate();
                     blocks[b].rotate();
                 }
+        
+                wPressed = true;
             }
-            
-            if (GetAsyncKeyState('Q') & 0x8000) {
-                break;
-            }
+        
+        } else {
+            // Reset trạng thái khi nhả phím W
+            wPressed = false;
+        }
+        
+        // Thoát game
+        if (GetAsyncKeyState('Q') & 0x8000) {
+            break;
+        }
         if (canMove(0,1)) y++;
         // Khi block không thể rơi tiếp
         else{
