@@ -204,25 +204,48 @@ void draw(){
 }
 
 // Hàm xóa dòng đầy và tăng tốc độ game
-void removeLine(){
-    int i, j;
-    for(i = H-2; i > 0; i--){
-        for(j = 1; j < W - 1; j++)
-            if (board[i][j] == ' ') break;
-        if(j == W - 1){
-            for(int ii = i; ii > 1; ii--)
-                for(int jj = 1; jj < W - 1; jj++)
-                board[ii][jj] = board[ii-1][jj];
-            for(int jj = 1; jj < W - 1; jj++)
-                board[1][jj] = ' ';
-// Tăng tốc độ game sau khi xóa dòng
-            score += 100;
-            total_lines++;
-            if (current_speed > 100) current_speed -= 25;
+void removeLine() {
+    int linesCleared = 0;
 
+    for (int i = H - 2; i >= 1; i--) {
+        bool fullLine = true;
+
+        // Kiểm tra hàng có đầy không, bỏ qua viền trái/phải
+        for (int j = 1; j < W - 1; j++) {
+            if (board[i][j] == ' ') {
+                fullLine = false;
+                break;
+            }
+        }
+
+        // Nếu hàng đầy thì xóa hàng
+        if (fullLine) {
+            linesCleared++;
+
+            // Dồn các hàng phía trên xuống
+            for (int row = i; row > 1; row--) {
+                for (int col = 1; col < W - 1; col++) {
+                    board[row][col] = board[row - 1][col];
+                }
+            }
+
+            // Làm trống hàng trên cùng
+            for (int col = 1; col < W - 1; col++) {
+                board[1][col] = ' ';
+            }
+
+            // Kiểm tra lại chính hàng này sau khi dồn xuống
             i++;
-            draw();
-                Sleep(200);
+        }
+    }
+
+    if (linesCleared > 0) {
+        score += linesCleared * 100;
+        total_lines += linesCleared;
+
+        if (current_speed > 100) {
+            current_speed -= 25 * linesCleared;
+            if (current_speed < 100) current_speed = 100;
         }
     }
 }
