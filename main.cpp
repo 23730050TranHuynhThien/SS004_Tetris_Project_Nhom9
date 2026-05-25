@@ -20,8 +20,6 @@ char board[H][W] = {};
 int x, y, b;
 int nextBlock;
 int current_speed = 500;     // Tốc độ rơi hiện tại của block
-<<<<<<< Updated upstream
-=======
 bool wPressed = false;      // Biến chống spam xoay block
 bool aPressed = false;
 bool dPressed = false;
@@ -34,7 +32,9 @@ const unsigned long rotateRepeat = 250; // xoay liên tục nếu giữ
 // Thời gian rơi (gravity)
 unsigned long lastFall = 0;
 // Thêm biến điểm và tổng dòng để lưu trạng thái người chơi
->>>>>>> Stashed changes
+bool wPressed = false;      // Biến chống spam xoay block
+bool aPressed = false;
+bool dPressed = false;
 int score = 0;               // Điểm số người chơi
 int total_lines = 0;        // Tổng số dòng đã xóa
 // Tách trạng thái khối đang rơi (currentShape) khỏi prototype trong blocks[]
@@ -262,25 +262,48 @@ void draw(){
 }
 
 // Hàm xóa dòng đầy và tăng tốc độ game
-void removeLine(){
-    int i, j;
-    for(i = H-2; i > 0; i--){
-        for(j = 1; j < W - 1; j++)
-            if (board[i][j] == ' ') break;
-        if(j == W - 1){
-            for(int ii = i; ii > 1; ii--)
-                for(int jj = 1; jj < W - 1; jj++)
-                board[ii][jj] = board[ii-1][jj];
-            for(int jj = 1; jj < W - 1; jj++)
-                board[1][jj] = ' ';
-// Tăng tốc độ game sau khi xóa dòng
-            score += 100;
-            total_lines++;
-            if (current_speed > 100) current_speed -= 25;
+void removeLine() {
+    int linesCleared = 0;
 
+    for (int i = H - 2; i >= 1; i--) {
+        bool fullLine = true;
+
+        // Kiểm tra hàng có đầy không, bỏ qua viền trái/phải
+        for (int j = 1; j < W - 1; j++) {
+            if (board[i][j] == ' ') {
+                fullLine = false;
+                break;
+            }
+        }
+
+        // Nếu hàng đầy thì xóa hàng
+        if (fullLine) {
+            linesCleared++;
+
+            // Dồn các hàng phía trên xuống
+            for (int row = i; row > 1; row--) {
+                for (int col = 1; col < W - 1; col++) {
+                    board[row][col] = board[row - 1][col];
+                }
+            }
+
+            // Làm trống hàng trên cùng
+            for (int col = 1; col < W - 1; col++) {
+                board[1][col] = ' ';
+            }
+
+            // Kiểm tra lại chính hàng này sau khi dồn xuống
             i++;
-            draw();
-                Sleep(200);
+        }
+    }
+
+    if (linesCleared > 0) {
+        score += linesCleared * 100;
+        total_lines += linesCleared;
+
+        if (current_speed > 100) {
+            current_speed -= 25 * linesCleared;
+            if (current_speed < 100) current_speed = 100;
         }
     }
 }
@@ -333,7 +356,6 @@ int main()
     while (1){
         unsigned long now = GetTickCount();
         boardDelBlock();
-<<<<<<< Updated upstream
         if (kbhit()){
             char c = getch();
             c = (char)tolower((unsigned char)c);
@@ -343,16 +365,71 @@ int main()
             if (c == 'x' && canMove( 0,1)) y++;
         // Xoay block khi nhấn phím W (xoay tạm, rollback nếu va chạm)
             if (c == 'w') {
+        // Điều khiển block bằng bàn phím realtime
+        // Di chuyển sang trái
+        if (GetAsyncKeyState('A') & 0x8000) {
+        
+            // Chỉ di chuyển 1 lần mỗi lần nhấn
+            if (!aPressed) {
+        
+                if (canMove(-1, 0))
+                    x--;
+        
+                aPressed = true;
+            }
+        
+        } else {
+            aPressed = false;
+        }
+        
+        // Di chuyển sang phải
+        if (GetAsyncKeyState('D') & 0x8000) {
+        
+            // Chỉ di chuyển 1 lần mỗi lần nhấn
+            if (!dPressed) {
+        
+                if (canMove(1, 0))
+                    x++;
+        
+                dPressed = true;
+            }
+        
+        } else {
+            dPressed = false;
+        }
+        
+        // Làm block rơi nhanh hơn
+        if (GetAsyncKeyState('X') & 0x8000) {
+            if (canMove(0, 1)) y++;
+        }
+        
+        // Xoay block
+        if (GetAsyncKeyState('W') & 0x8000) {
+        
+            // Chỉ xoay 1 lần cho mỗi lần nhấn
+            if (!wPressed) {
+        
                 blocks[b].rotate();
-                if (!canMove(0,0)){
-                    // revert
+        
+                // Nếu xoay bị đụng tường hoặc block khác
+                // thì xoay ngược lại để tránh lỗi
+                if (!canMove(0, 0)) {
                     blocks[b].rotate();
                     blocks[b].rotate();
                     blocks[b].rotate();
                 }
+        
+                wPressed = true;
             }
-
-            if (c == 'q') break;
+        
+        } else {
+            // Reset trạng thái khi nhả phím W
+            wPressed = false;
+        }
+        
+        // Thoát game
+        if (GetAsyncKeyState('Q') & 0x8000) {
+            break;
         }
         if (canMove(0,1)) y++;
         // Khi block không thể rơi tiếp
@@ -366,7 +443,7 @@ int main()
             if (!canMove(0,0)) {
                 endGame();
                 break;
-=======
+
         // Điều khiển block bằng bàn phím realtime
         // Di chuyển sang trái (autorepeat đơn giản: lặp mỗi repeatDelay khi giữ)
         if (GetAsyncKeyState('A') & 0x8000) {
@@ -461,7 +538,6 @@ int main()
                 // reset timers để tránh autorepeat nhảy ngay khi spawn
                 lastA = lastD = lastW = GetTickCount();
                 if (!canMove(0,0)) { endGame(); break; }
->>>>>>> Stashed changes
             }
             lastFall = now;
         }
