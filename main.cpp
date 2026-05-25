@@ -32,11 +32,11 @@ const unsigned long rotateRepeat = 250; // xoay liên tục nếu giữ
 // Thời gian rơi (gravity)
 unsigned long lastFall = 0;
 // Thêm biến điểm và tổng dòng để lưu trạng thái người chơi
-bool wPressed = false;      // Biến chống spam xoay block
-bool aPressed = false;
-bool dPressed = false;
 int score = 0;               // Điểm số người chơi
 int total_lines = 0;        // Tổng số dòng đã xóa
+
+// Lưu chế độ console ban đầu để restore khi thoát
+DWORD g_origConsoleMode = 0;
 // Tách trạng thái khối đang rơi (currentShape) khỏi prototype trong blocks[]
 // Việc này để xoay/di chuyển chỉ ảnh hưởng tới khối hiện tại, không thay đổi prototype
 char currentShape[4][4];
@@ -321,6 +321,10 @@ void endGame() {
     getch(); // chờ người chơi nhấn phím
     // Xóa bộ đệm phím để tránh các phím đã nhấn in ra shell sau khi thoát
     FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+    // Khôi phục chế độ console input nếu đã lưu
+    if (g_origConsoleMode != 0) {
+        SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), g_origConsoleMode);
+    }
 }
 int main()
 {
@@ -343,6 +347,7 @@ int main()
     DWORD origMode = 0;
     if (hStdin != INVALID_HANDLE_VALUE) {
         if (GetConsoleMode(hStdin, &origMode)) {
+            g_origConsoleMode = origMode; // lưu để restore sau
             DWORD newMode = origMode;
             newMode &= ~ENABLE_ECHO_INPUT;
             newMode &= ~ENABLE_LINE_INPUT;
@@ -351,201 +356,55 @@ int main()
         }
     }
 
-    //GAME LOOP (time-stepped for responsive input)
+    // VÒNG LẶP GAME (time-stepped, dùng GetAsyncKeyState duy nhất)
     lastFall = GetTickCount();
-    while (1){
+    while (1) {
         unsigned long now = GetTickCount();
         boardDelBlock();
-        if (kbhit()){
-            char c = getch();
-            c = (char)tolower((unsigned char)c);
-        // Điều khiển block bằng bàn phím
-            if (c == 'a' && canMove(-1,0)) x--;
-            if (c == 'd' && canMove( 1,0)) x++;
-            if (c == 'x' && canMove( 0,1)) y++;
-        // Xoay block khi nhấn phím W (xoay tạm, rollback nếu va chạm)
-            if (c == 'w') {
-        // Điều khiển block bằng bàn phím realtime
-        // Di chuyển sang trái
-        if (GetAsyncKeyState('A') & 0x8000) {
-        
-            // Chỉ di chuyển 1 lần mỗi lần nhấn
-            if (!aPressed) {
-        
-                if (canMove(-1, 0))
-                    x--;
-        
-                aPressed = true;
-            }
-        
-        } else {
-            aPressed = false;
-        }
-        
-        // Di chuyển sang phải
-        if (GetAsyncKeyState('D') & 0x8000) {
-        
-            // Chỉ di chuyển 1 lần mỗi lần nhấn
-            if (!dPressed) {
-        
-                if (canMove(1, 0))
-                    x++;
-        
-                dPressed = true;
-            }
-        
-        } else {
-            dPressed = false;
-        }
-        
-        // Làm block rơi nhanh hơn
-        if (GetAsyncKeyState('X') & 0x8000) {
-            if (canMove(0, 1)) y++;
-        }
-        
-        // Xoay block
-        if (GetAsyncKeyState('W') & 0x8000) {
-        
-            // Chỉ xoay 1 lần cho mỗi lần nhấn
-            if (!wPressed) {
-        
-                blocks[b].rotate();
-        
-                // Nếu xoay bị đụng tường hoặc block khác
-                // thì xoay ngược lại để tránh lỗi
-                if (!canMove(0, 0)) {
-                    blocks[b].rotate();
-                    blocks[b].rotate();
-                    blocks[b].rotate();
-                }
-        
-                wPressed = true;
-            }
-        
-        } else {
-            // Reset trạng thái khi nhả phím W
-            wPressed = false;
-        }
-        
-        // Thoát game
-        if (GetAsyncKeyState('Q') & 0x8000) {
-            break;
-        }
-        if (canMove(0,1)) y++;
-        // Khi block không thể rơi tiếp
-        else{
-            block2Board();
-            removeLine();
-            x = W / 2 - 2;
-            y = 1;
-            b = nextBlock;
-            nextBlock = rand() % 7;
-            if (!canMove(0,0)) {
-                endGame();
-                break;
 
-        // Điều khiển block bằng bàn phím realtime
-        // Di chuyển sang trái (autorepeat đơn giản: lặp mỗi repeatDelay khi giữ)
-        if (GetAsyncKeyState('A') & 0x8000) {
-            if (!aPressed) {
-                if (canMove(-1, 0)) x--;
-                aPressed = true;
-                lastA = now;
-            } else if (now - lastA >= repeatDelay) {
-                if (canMove(-1, 0)) x--;
-                lastA = now;
-            }
-        } else {
-            aPressed = false;
-        }
+        // Thoát nhanh
+        if (GetAsyncKeyState('Q') & 0x8000) break;
 
-        // Di chuyển sang phải
+        // Di chuyển trái (autorepeat)
+        if (GetAsyncKeyState('A') & 0x8000) {
+            if (!aPressed) { if (canMove(-1,0)) x--; aPressed = true; lastA = now; }
+            else if (now - lastA >= repeatDelay) { if (canMove(-1,0)) x--; lastA = now; }
+        } else aPressed = false;
+
+        // Di chuyển phải (autorepeat)
         if (GetAsyncKeyState('D') & 0x8000) {
-            if (!dPressed) {
-                if (canMove(1, 0)) x++;
-                dPressed = true;
-                lastD = now;
-            } else if (now - lastD >= repeatDelay) {
-                if (canMove(1, 0)) x++;
-                lastD = now;
-            }
-        } else {
-            dPressed = false;
-        }
-        
-        // Làm block rơi nhanh hơn (giữ X)
-        if (GetAsyncKeyState('X') & 0x8000) {
-            if (canMove(0, 1)) y++;
-        }
-        
-        // Xoay block với wall-kick đơn giản
+            if (!dPressed) { if (canMove(1,0)) x++; dPressed = true; lastD = now; }
+            else if (now - lastD >= repeatDelay) { if (canMove(1,0)) x++; lastD = now; }
+        } else dPressed = false;
+
+        // Soft drop
+        if (GetAsyncKeyState('X') & 0x8000) { if (canMove(0,1)) { y++; lastFall = now; } }
+
+        // Xoay với wall-kick đơn giản (làm trên currentShape)
         if (GetAsyncKeyState('W') & 0x8000) {
-            unsigned long now = GetTickCount();
             if (!wPressed || now - lastW >= rotateRepeat) {
-                // thực hiện xoay
-                char temp[4][4];
-                for (int i = 0; i < 4; ++i)
-                    for (int j = 0; j < 4; ++j)
-                        temp[i][j] = currentShape[i][j];
-
-                char r[4][4];
-                for (int i = 0; i < 4; ++i)
-                    for (int j = 0; j < 4; ++j)
-                        r[j][3 - i] = temp[i][j];
-
-                for (int i = 0; i < 4; ++i)
-                    for (int j = 0; j < 4; ++j)
-                        currentShape[i][j] = r[i][j];
-
-                if (!canMove(0, 0)) {
-                    bool kicked = false;
-                    if (canMove(-1, 0)) { x -= 1; kicked = true; }
-                    else if (canMove(1, 0)) { x += 1; kicked = true; }
-                    if (!kicked) {
-                        for (int i = 0; i < 4; ++i)
-                            for (int j = 0; j < 4; ++j)
-                                currentShape[i][j] = temp[i][j];
-                    }
-                }
-
-                // clamp x
-                if (x < 1) x = 1;
-                if (x > W-2) x = W-2;
-
-                wPressed = true;
-                lastW = now;
+                char temp[4][4]; for (int i=0;i<4;i++) for (int j=0;j<4;j++) temp[i][j]=currentShape[i][j];
+                char r[4][4]; for (int i=0;i<4;i++) for (int j=0;j<4;j++) r[j][3-i]=temp[i][j];
+                for (int i=0;i<4;i++) for (int j=0;j<4;j++) currentShape[i][j]=r[i][j];
+                if (!canMove(0,0)) { bool kicked=false; if (canMove(-1,0)) { x-=1; kicked=true; } else if (canMove(1,0)) { x+=1; kicked=true; } if (!kicked) for (int i=0;i<4;i++) for (int j=0;j<4;j++) currentShape[i][j]=temp[i][j]; }
+                if (x<1) x=1; if (x>W-2) x=W-2;
+                wPressed=true; lastW = now;
             }
-        } else {
-            wPressed = false;
-        }
-        
-        // Thoát game
-        if (GetAsyncKeyState('Q') & 0x8000) { break; }
+        } else wPressed = false;
 
-        // Gravity theo thời gian: rơi sau current_speed ms
+        // Gravity theo thời gian
         if (now - lastFall >= (unsigned long)current_speed) {
-            if (canMove(0,1)) y++;
+            if (canMove(0,1)) { y++; }
             else {
-                // Khi block không thể rơi tiếp
-                block2Board();
-                removeLine();
-                x = W / 2 - 2;
-                y = 1;
-                // spawn khối mới từ nextBlock và khởi tạo currentShape tương ứng
-                b = nextBlock;
-                copyBlockToCurrent(b);
-                nextBlock = rand() % 7;
-                // reset timers để tránh autorepeat nhảy ngay khi spawn
+                block2Board(); removeLine();
+                x = W/2 - 2; y = 1;
+                b = nextBlock; copyBlockToCurrent(b); nextBlock = rand()%7;
                 lastA = lastD = lastW = GetTickCount();
                 if (!canMove(0,0)) { endGame(); break; }
             }
             lastFall = now;
         }
-        // Ghi block hiện tại vào board cho render
-        block2Board();
-        draw();
-        // Nhỏ giấc ngủ để tránh chiếm 100% CPU, nhưng vẫn responsive
+
+        block2Board(); draw();
         Sleep(10);
-    }
-    return 0;
-}
+        }
