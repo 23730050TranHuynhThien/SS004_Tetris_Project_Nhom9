@@ -284,26 +284,32 @@ int main()
     //GAME LOOP
     while (1){
         boardDelBlock();
-        if (kbhit()){
-            char c = getch();
-            c = (char)tolower((unsigned char)c);
         // Điều khiển block bằng bàn phím
-            if (c == 'a' && canMove(-1,0)) x--;
-            if (c == 'd' && canMove( 1,0)) x++;
-            if (c == 'x' && canMove( 0,1)) y++;
-        // Xoay block khi nhấn phím W (xoay tạm, rollback nếu va chạm)
-            if (c == 'w') {
+            if (GetAsyncKeyState('A') & 0x8000) {
+                if (canMove(-1, 0)) x--;
+            }
+            
+            if (GetAsyncKeyState('D') & 0x8000) {
+                if (canMove(1, 0)) x++;
+            }
+            
+            if (GetAsyncKeyState('X') & 0x8000) {
+                if (canMove(0, 1)) y++;
+            }
+            
+            if (GetAsyncKeyState('W') & 0x8000) {
                 blocks[b].rotate();
-                if (!canMove(0,0)){
-                    // revert
+            
+                if (!canMove(0, 0)) {
                     blocks[b].rotate();
                     blocks[b].rotate();
                     blocks[b].rotate();
                 }
             }
-
-            if (c == 'q') break;
-        }
+            
+            if (GetAsyncKeyState('Q') & 0x8000) {
+                break;
+            }
         if (canMove(0,1)) y++;
         // Khi block không thể rơi tiếp
         else{
