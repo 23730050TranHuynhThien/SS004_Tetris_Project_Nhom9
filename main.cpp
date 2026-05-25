@@ -20,8 +20,27 @@ char board[H][W] = {};
 int x, y, b;
 int nextBlock;
 int current_speed = 500;     // Tốc độ rơi hiện tại của block
+<<<<<<< Updated upstream
+=======
+bool wPressed = false;      // Biến chống spam xoay block
+bool aPressed = false;
+bool dPressed = false;
+// Thời gian autorepeat (ms)
+unsigned long lastA = 0, lastD = 0, lastW = 0;
+const unsigned long initialDelay = 200; // (unused) kept for reference
+const unsigned long repeatDelay = 160;   // di chuyển liên tục (tăng để giảm nhảy)
+const unsigned long rotateRepeat = 250; // xoay liên tục nếu giữ
+
+// Thời gian rơi (gravity)
+unsigned long lastFall = 0;
+// Thêm biến điểm và tổng dòng để lưu trạng thái người chơi
+>>>>>>> Stashed changes
 int score = 0;               // Điểm số người chơi
 int total_lines = 0;        // Tổng số dòng đã xóa
+// Tách trạng thái khối đang rơi (currentShape) khỏi prototype trong blocks[]
+// Việc này để xoay/di chuyển chỉ ảnh hưởng tới khối hiện tại, không thay đổi prototype
+char currentShape[4][4];
+
 
 //CLASS BLOCK
 // Quản lý dữ liệu và thao tác của từng khối Tetris
@@ -82,6 +101,14 @@ public:
 
 // Khởi tạo 7 loại block Tetris
 Block blocks[7];
+// Sao chép prototype vào currentShape
+void copyBlockToCurrent(int idx){
+    //sao chép hình dạng prototype (blocks[idx]) vào currentShape
+    // thao tác xoay, di chuyển chỉ thay đổi currentShape
+    for (int i = 0; i < 4; ++i)
+        for (int j = 0; j < 4; ++j)
+            currentShape[i][j] = blocks[idx].getCell(i,j);
+}
 void initBlocks() {
     char I[4][4] = {
         {' ', BLOCK_CHAR, ' ', ' '},
@@ -145,7 +172,8 @@ void initBlocks() {
 bool canMove(int dx, int dy){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (blocks[b].getCell(i, j) != ' ') {
+            //kiểm tra dựa trên currentShape thay vì prototype
+            if (currentShape[i][j] != ' ') {
                 int xt = x + j + dx;
                 int yt = y + i + dy;         // Kiểm tra va chạm với tường hoặc block khác
                 if (xt < 1 || xt >= W-1 || yt < 1 || yt >= H-1 ) return false;
@@ -157,12 +185,13 @@ bool canMove(int dx, int dy){
 void block2Board(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (blocks[b].getCell(i, j) != ' ')
+            // ghi currentShape vào board (không ghi prototype trực tiếp)
+            if (currentShape[i][j] != ' ')
             {
                 int yi = y + i;
                 int xj = x + j;
                 if (yi >= 1 && yi < H-1 && xj >= 1 && xj < W-1)
-                    board[yi][xj] = blocks[b].getCell(i, j);
+                    board[yi][xj] = currentShape[i][j];
             }
 }
 
@@ -170,7 +199,8 @@ void block2Board(){
 void boardDelBlock(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (blocks[b].getCell(i, j) != ' ')
+            //xóa dựa trên currentShape để tránh ảnh hưởng prototype
+            if (currentShape[i][j] != ' ')
             {
                 int yi = y + i;
                 int xj = x + j;
@@ -192,7 +222,7 @@ void gotoxy(int x, int y) {
     c.Y = y;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
 }
-// Preview Next Block
+// xem trước Next Block
 void drawNextBlock() {
 
     gotoxy(W + 5, 2);
@@ -266,6 +296,8 @@ void endGame() {
     cout << "Thanks for playing!" << endl;
     cout << "Press any key to exit..." << endl;
     getch(); // chờ người chơi nhấn phím
+    // Xóa bộ đệm phím để tránh các phím đã nhấn in ra shell sau khi thoát
+    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 }
 int main()
 {
@@ -274,6 +306,8 @@ int main()
     // Ẩn con trỏ console
     x = W / 2 - 2; y = 1; b = rand()%7;
     nextBlock = rand() % 7;
+    //khởi tạo currentShape từ prototype ban đầu
+    copyBlockToCurrent(b);
     initBoard();
 
     CONSOLE_CURSOR_INFO cursorInfo;
@@ -281,9 +315,25 @@ int main()
     cursorInfo.bVisible = false;
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 
-    //GAME LOOP
+    // Tắt echo và line input để tránh các phím bấm in ra shell khi thoát
+    HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD origMode = 0;
+    if (hStdin != INVALID_HANDLE_VALUE) {
+        if (GetConsoleMode(hStdin, &origMode)) {
+            DWORD newMode = origMode;
+            newMode &= ~ENABLE_ECHO_INPUT;
+            newMode &= ~ENABLE_LINE_INPUT;
+            SetConsoleMode(hStdin, newMode);
+            FlushConsoleInputBuffer(hStdin);
+        }
+    }
+
+    //GAME LOOP (time-stepped for responsive input)
+    lastFall = GetTickCount();
     while (1){
+        unsigned long now = GetTickCount();
         boardDelBlock();
+<<<<<<< Updated upstream
         if (kbhit()){
             char c = getch();
             c = (char)tolower((unsigned char)c);
@@ -316,11 +366,110 @@ int main()
             if (!canMove(0,0)) {
                 endGame();
                 break;
+=======
+        // Điều khiển block bằng bàn phím realtime
+        // Di chuyển sang trái (autorepeat đơn giản: lặp mỗi repeatDelay khi giữ)
+        if (GetAsyncKeyState('A') & 0x8000) {
+            if (!aPressed) {
+                if (canMove(-1, 0)) x--;
+                aPressed = true;
+                lastA = now;
+            } else if (now - lastA >= repeatDelay) {
+                if (canMove(-1, 0)) x--;
+                lastA = now;
             }
+        } else {
+            aPressed = false;
         }
+
+        // Di chuyển sang phải
+        if (GetAsyncKeyState('D') & 0x8000) {
+            if (!dPressed) {
+                if (canMove(1, 0)) x++;
+                dPressed = true;
+                lastD = now;
+            } else if (now - lastD >= repeatDelay) {
+                if (canMove(1, 0)) x++;
+                lastD = now;
+            }
+        } else {
+            dPressed = false;
+        }
+        
+        // Làm block rơi nhanh hơn (giữ X)
+        if (GetAsyncKeyState('X') & 0x8000) {
+            if (canMove(0, 1)) y++;
+        }
+        
+        // Xoay block với wall-kick đơn giản
+        if (GetAsyncKeyState('W') & 0x8000) {
+            unsigned long now = GetTickCount();
+            if (!wPressed || now - lastW >= rotateRepeat) {
+                // thực hiện xoay
+                char temp[4][4];
+                for (int i = 0; i < 4; ++i)
+                    for (int j = 0; j < 4; ++j)
+                        temp[i][j] = currentShape[i][j];
+
+                char r[4][4];
+                for (int i = 0; i < 4; ++i)
+                    for (int j = 0; j < 4; ++j)
+                        r[j][3 - i] = temp[i][j];
+
+                for (int i = 0; i < 4; ++i)
+                    for (int j = 0; j < 4; ++j)
+                        currentShape[i][j] = r[i][j];
+
+                if (!canMove(0, 0)) {
+                    bool kicked = false;
+                    if (canMove(-1, 0)) { x -= 1; kicked = true; }
+                    else if (canMove(1, 0)) { x += 1; kicked = true; }
+                    if (!kicked) {
+                        for (int i = 0; i < 4; ++i)
+                            for (int j = 0; j < 4; ++j)
+                                currentShape[i][j] = temp[i][j];
+                    }
+                }
+
+                // clamp x
+                if (x < 1) x = 1;
+                if (x > W-2) x = W-2;
+
+                wPressed = true;
+                lastW = now;
+            }
+        } else {
+            wPressed = false;
+        }
+        
+        // Thoát game
+        if (GetAsyncKeyState('Q') & 0x8000) { break; }
+
+        // Gravity theo thời gian: rơi sau current_speed ms
+        if (now - lastFall >= (unsigned long)current_speed) {
+            if (canMove(0,1)) y++;
+            else {
+                // Khi block không thể rơi tiếp
+                block2Board();
+                removeLine();
+                x = W / 2 - 2;
+                y = 1;
+                // spawn khối mới từ nextBlock và khởi tạo currentShape tương ứng
+                b = nextBlock;
+                copyBlockToCurrent(b);
+                nextBlock = rand() % 7;
+                // reset timers để tránh autorepeat nhảy ngay khi spawn
+                lastA = lastD = lastW = GetTickCount();
+                if (!canMove(0,0)) { endGame(); break; }
+>>>>>>> Stashed changes
+            }
+            lastFall = now;
+        }
+        // Ghi block hiện tại vào board cho render
         block2Board();
         draw();
-            Sleep(current_speed);
+        // Nhỏ giấc ngủ để tránh chiếm 100% CPU, nhưng vẫn responsive
+        Sleep(10);
     }
     return 0;
 }
