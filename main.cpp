@@ -21,6 +21,8 @@ int x, y, b;
 int nextBlock;
 int current_speed = 500;     // Tốc độ rơi hiện tại của block
 bool wPressed = false;      // Biến chống spam xoay block
+bool aPressed = false;
+bool dPressed = false;
 int score = 0;               // Điểm số người chơi
 int total_lines = 0;        // Tổng số dòng đã xóa
 
@@ -288,12 +290,34 @@ int main()
         // Điều khiển block bằng bàn phím realtime
         // Di chuyển sang trái
         if (GetAsyncKeyState('A') & 0x8000) {
-            if (canMove(-1, 0)) x--;
+        
+            // Chỉ di chuyển 1 lần mỗi lần nhấn
+            if (!aPressed) {
+        
+                if (canMove(-1, 0))
+                    x--;
+        
+                aPressed = true;
+            }
+        
+        } else {
+            aPressed = false;
         }
         
         // Di chuyển sang phải
         if (GetAsyncKeyState('D') & 0x8000) {
-            if (canMove(1, 0)) x++;
+        
+            // Chỉ di chuyển 1 lần mỗi lần nhấn
+            if (!dPressed) {
+        
+                if (canMove(1, 0))
+                    x++;
+        
+                dPressed = true;
+            }
+        
+        } else {
+            dPressed = false;
         }
         
         // Làm block rơi nhanh hơn
