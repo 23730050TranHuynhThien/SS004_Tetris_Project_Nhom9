@@ -298,8 +298,19 @@ void removeLine() {
     }
 
     if (linesCleared > 0) {
-        score += linesCleared * 100;
-        total_lines += linesCleared;
+
+    switch(linesCleared) {
+
+        case 1: score += 100;break;
+
+        case 2: score += 300;break;
+
+        case 3: score += 500;break;
+
+        case 4: score += 800;break;
+    }
+
+    total_lines += linesCleared;
 
         if (current_speed > 100) {
             current_speed -= 25 * linesCleared;
@@ -408,3 +419,5 @@ int main()
         block2Board(); draw();
         Sleep(10);
         }
+    return 0;
+}
