@@ -1,15 +1,36 @@
-# 🎮 SS004 - TETRIS GAME PROJECT (NHÓM 9)
+README hiện tại của bạn đã khá ổn rồi, nhưng đúng là:
+
+* thiếu thành viên Thúy Vương,
+* một vài vai trò chưa sát thực tế,
+* có vài chỗ hơi “template”,
+* chưa thể hiện rõ quá trình teamwork thật,
+* và chưa phản ánh đúng gameplay/code hiện tại.
+
+Mình viết lại theo hướng:
+
+* nhìn chuyên nghiệp kiểu GitHub thật,
+* bám sát đúng project hiện tại,
+* đúng workflow nhóm đã làm,
+* đúng tính năng thật sự đã có,
+* và vẫn đẹp để thầy mở repo lên thấy “có đầu tư”.
+
+````md
+# 🎮 SS004 - TETRIS GAME PROJECT (NHÓM 09)
 
 <div align="center">
 
-![C++](https://img.shields.io/badge/C%2B%2B-17-blue?style=for-the-badge\&logo=c%2B%2B)
+![C++](https://img.shields.io/badge/C%2B%2B-17-blue?style=for-the-badge&logo=c%2B%2B)
 ![UIT](https://img.shields.io/badge/UIT-SS004-success?style=for-the-badge)
-![GitHub](https://img.shields.io/badge/Git-Workflow-orange?style=for-the-badge\&logo=git)
-![Overleaf](https://img.shields.io/badge/LaTeX-Overleaf-green?style=for-the-badge\&logo=overleaf)
+![GitHub](https://img.shields.io/badge/GitHub-Workflow-orange?style=for-the-badge&logo=github)
+![Git](https://img.shields.io/badge/Git-Branching-red?style=for-the-badge&logo=git)
+![Overleaf](https://img.shields.io/badge/LaTeX-Overleaf-green?style=for-the-badge&logo=overleaf)
+![Slack](https://img.shields.io/badge/Slack-Teamwork-purple?style=for-the-badge&logo=slack)
 
-## 🕹️ ĐỒ ÁN CUỐI KỲ MÔN KỸ NĂNG NGHỀ NGHIỆP (SS004)
+<br>
 
-### Xây dựng trò chơi Tetris bằng C++ kết hợp quy trình làm việc nhóm chuyên nghiệp
+# 🕹️ ĐỒ ÁN CUỐI KỲ MÔN KỸ NĂNG NGHỀ NGHIỆP (SS004)
+
+### Xây dựng trò chơi Tetris bằng C++ kết hợp quy trình làm việc nhóm thực tế
 
 </div>
 
@@ -17,87 +38,98 @@
 
 # 📌 Giới thiệu dự án
 
-Dự án được thực hiện nhằm xây dựng lại trò chơi **Tetris cổ điển** bằng ngôn ngữ **C++**, đồng thời áp dụng đầy đủ quy trình làm việc nhóm trong phát triển phần mềm thực tế.
+Dự án được thực hiện nhằm xây dựng lại trò chơi **Tetris cổ điển** bằng ngôn ngữ **C++** trên môi trường console.
 
-Không chỉ tập trung vào gameplay, nhóm còn triển khai:
+Bên cạnh việc phát triển gameplay, nhóm còn áp dụng đầy đủ quy trình làm việc nhóm trong phát triển phần mềm thực tế như:
 
-* 📂 Quản lý mã nguồn bằng GitHub
-* 🌿 Làm việc theo branch
-* 🔀 Merge code bằng Pull Request
-* 📋 Quản lý task bằng GitHub Issues
-* 💬 Trao đổi công việc qua Slack
-* 📝 Viết báo cáo bằng LaTeX trên Overleaf
+- 📂 Quản lý source code bằng GitHub
+- 🌿 Làm việc theo branch
+- 🔀 Merge code bằng Pull Request
+- 📋 Quản lý task và tiến độ nhóm
+- 💬 Trao đổi công việc qua Slack
+- 📝 Viết báo cáo bằng LaTeX trên Overleaf
 
-👉 Đây không chỉ là một game console đơn giản mà còn là một mô hình mini software project hoàn chỉnh.
+Mục tiêu của đồ án không chỉ là tạo ra một game có thể chơi được mà còn giúp các thành viên:
+- làm quen workflow Git thực tế,
+- phối hợp source code,
+- quản lý task,
+- và rèn luyện kỹ năng teamwork trong môi trường software project.
 
 ---
 
 # 🎯 Mục tiêu dự án
 
-* Xây dựng game Tetris có thể chơi được trên console
-* Áp dụng OOP (Object Oriented Programming)
-* Thực hành kỹ năng teamwork
-* Làm quen quy trình Git workflow
-* Rèn luyện quản lý task và phân chia công việc
-* Hoàn thiện kỹ năng viết tài liệu kỹ thuật
+- Xây dựng gameplay Tetris cơ bản bằng C++
+- Áp dụng lập trình hướng đối tượng (OOP)
+- Thực hành quy trình Git workflow
+- Rèn luyện kỹ năng teamwork
+- Làm quen với merge branch và xử lý conflict
+- Viết tài liệu kỹ thuật bằng LaTeX
+- Hoàn thiện quy trình làm việc nhóm theo yêu cầu môn học
 
 ---
 
 # 🧩 Gameplay
 
-Người chơi sẽ điều khiển các khối Tetromino rơi từ trên xuống.
+Người chơi điều khiển các khối Tetromino rơi từ trên xuống và sắp xếp chúng thành các hàng ngang hoàn chỉnh.
 
-🎮 Nhiệm vụ:
+Khi một hàng được lấp đầy:
+- hàng đó sẽ bị xóa,
+- các block phía trên sẽ rơi xuống,
+- và tốc độ game sẽ tăng dần theo thời gian.
 
-* Sắp xếp các block thành hàng ngang hoàn chỉnh
-* Hàng đầy sẽ tự động bị xóa
-* Tốc độ game tăng dần theo thời gian
-* Game kết thúc khi block chạm đỉnh board
+Game sẽ kết thúc khi các khối chạm đến đỉnh board.
 
 ---
 
 # 🎮 Điều khiển
 
-| Phím | Chức năng           |
-| ---- | ------------------- |
-| A    | Di chuyển sang trái |
-| D    | Di chuyển sang phải |
-| X    | Rơi nhanh           |
-| W    | Xoay block          |
-| Q    | Thoát game          |
+| Phím | Chức năng |
+|------|------------|
+| A | Di chuyển sang trái |
+| D | Di chuyển sang phải |
+| X | Rơi nhanh |
+| W | Xoay block |
+| Q | Thoát game |
 
 ---
 
-# 🧱 Các tính năng chính
+# ✨ Các tính năng đã triển khai
 
 ## ✅ Gameplay cơ bản
+- Block rơi tự động
+- Random block
+- Collision với tường
+- Collision giữa các block
+- Kiểm tra game over
 
-* Block rơi tự động
-* Random block
-* Va chạm với tường
-* Va chạm block
-
-## ✅ Xóa hàng
-
-* Tự động kiểm tra hàng đầy
-* Xóa line
-* Dồn block xuống dưới
+## ✅ Remove Line
+- Tự động kiểm tra hàng đầy
+- Xóa dòng hoàn chỉnh
+- Dồn block phía trên xuống
 
 ## ✅ Tăng độ khó
-
-* Tăng tốc độ game sau mỗi lần xóa line
+- Tăng tốc độ game sau khi xóa line
+- Gameplay nhanh dần theo thời gian
 
 ## ✅ OOP
+- Sử dụng class `Block`
+- Quản lý block bằng object
+- Tách prototype block và currentShape
 
-* Sử dụng class `Block`
-* Quản lý dữ liệu block bằng object
+## ✅ Gameplay Improvement
+- Hiển thị Next Block
+- Hiển thị Score
+- Hiển thị tổng số line đã xóa
+- Wall-kick đơn giản khi xoay block
+- Input realtime bằng `GetAsyncKeyState`
 
 ## ✅ Git Workflow
-
-* Làm việc theo branch
-* Pull Request
-* Merge code
-* Commit history
+- Làm việc theo branch
+- Pull Request
+- Merge code
+- Commit history
+- Contributor tracking
 
 ---
 
@@ -106,59 +138,87 @@ Người chơi sẽ điều khiển các khối Tetromino rơi từ trên xuốn
 ```bash
 SS004_Tetris_Project_Nhom9
 │
+├── .vscode/
 ├── src/
-│   ├── main.cpp
-│   └── block.cpp
 │
+├── main.cpp
 ├── README.md
+├── test_collision.md
 └── .gitignore
-```
+````
 
 ---
 
 # 👥 Thành viên nhóm
 
-| Thành viên            | Vai trò                          |
-| --------------------- | -------------------------------- |
-| Trần Huỳnh Thiện      | Project Manager / Gameplay Logic |
-| Đào Hoàng Huy         | Base Game Structure              |
-| Nguyễn Trần Ngọc Ngọc | UI Board / Block Design          |
+| Thành viên            | Vai trò                                                         |
+| --------------------- | --------------------------------------------------------------- |
+| Trần Huỳnh Thiện      | Project Manager, Gameplay Logic, Git Workflow, Tổng hợp báo cáo |
+| Đào Hoàng Huy         | Gameplay Development, UI Board, Rendering, Logic hỗ trợ         |
+| Nguyễn Trần Ngọc Ngọc | Gameplay Support, Test game, Thiết kế slide                     |
+| Phan Thị Thúy Vương   | Test gameplay, Hỗ trợ tài liệu, Thuyết trình                    |
 
 ---
 
-# 🔧 Công nghệ sử dụng
+# 🔧 Công nghệ và công cụ sử dụng
 
-| Công cụ       | Mục đích           |
-| ------------- | ------------------ |
-| C++           | Lập trình game     |
-| GitHub        | Quản lý mã nguồn   |
-| Git Branch    | Làm việc song song |
-| GitHub Issues | Quản lý task       |
-| Slack         | Trao đổi nhóm      |
-| Overleaf      | Viết báo cáo LaTeX |
+| Công cụ      | Mục đích             |
+| ------------ | -------------------- |
+| C++          | Lập trình game       |
+| GitHub       | Quản lý source code  |
+| Git Branch   | Làm việc song song   |
+| Pull Request | Merge và review code |
+| Slack        | Trao đổi công việc   |
+| Slack Canvas | Quản lý task         |
+| Overleaf     | Viết báo cáo LaTeX   |
+| VS Code      | Coding và debug      |
 
 ---
 
-# 📈 Quy trình làm việc nhóm
+# 📈 Workflow làm việc nhóm
 
 Nhóm áp dụng mô hình workflow thực tế:
 
 ```text
-Issue → Branch → Coding → Commit → Pull Request → Review → Merge
+Task → Branch → Coding → Commit → Pull Request → Review → Merge
 ```
 
-Mỗi thành viên:
+Quy trình làm việc:
 
-* nhận task riêng
-* code trên branch riêng
-* submit Pull Request
-* review chéo trước khi merge vào main
+* Mỗi thành viên nhận task riêng
+* Code trên branch riêng
+* Commit thường xuyên
+* Push lên GitHub
+* Tạo Pull Request
+* Merge vào branch main sau khi kiểm tra
+
+Trong quá trình thực hiện, nhóm đã:
+
+* xử lý merge conflict,
+* chia lại công việc,
+* debug gameplay,
+* và phối hợp chỉnh sửa source code trực tiếp trên GitHub.
 
 ---
 
-# 🚀 Hướng phát triển
+# 🧪 Quá trình kiểm thử
 
-Trong tương lai, game có thể mở rộng thêm:
+Gameplay được test nhiều lần để kiểm tra:
+
+* Collision
+* Rotation
+* Remove line
+* Input realtime
+* Game over
+* Speed scaling
+
+Các lỗi được trao đổi và debug thông qua Slack trước khi cập nhật lên GitHub.
+
+---
+
+# 🚀 Hướng phát triển trong tương lai
+
+Nếu tiếp tục phát triển, game có thể mở rộng thêm:
 
 * 🔊 Âm thanh
 * 🎨 Theme màu sắc
@@ -166,12 +226,13 @@ Trong tương lai, game có thể mở rộng thêm:
 * 💾 Lưu điểm bằng file/database
 * 🌐 Multiplayer local
 * ✨ Hiệu ứng animation
+* 📱 Giao diện đồ họa GUI
 
 ---
 
 # 📚 Báo cáo dự án
 
-Báo cáo được viết bằng:
+Báo cáo được thực hiện bằng:
 
 * LaTeX
 * Overleaf
@@ -180,26 +241,30 @@ Báo cáo được viết bằng:
 Bao gồm:
 
 * Hợp đồng nhóm
-* Gameplay guide
-* Technical document
-* Team workflow
-* Kỹ năng áp dụng
-* Đánh giá thực hiện hợp đồng
+* Link công cụ làm việc
+* Hướng dẫn chơi game
+* Tài liệu kỹ thuật
+* Mô tả quá trình teamwork
+* Các kỹ năng áp dụng
+* Đánh giá thực hiện hợp đồng nhóm
 
 ---
 
 # 🏫 Thông tin môn học
 
-* Môn học: Kỹ năng nghề nghiệp (SS004)
-* Trường: Đại học Công nghệ Thông tin – ĐHQG TP.HCM
-* Giảng viên: [toannv@uit.edu.vn](mailto:toannv@uit.edu.vn)
+| Nội dung   | Thông tin                                     |
+| ---------- | --------------------------------------------- |
+| Môn học    | Kỹ năng nghề nghiệp (SS004)                   |
+| Trường     | Đại học Công nghệ Thông tin - ĐHQG TP.HCM     |
+| Giảng viên | [toannv@uit.edu.vn](mailto:toannv@uit.edu.vn) |
 
 ---
 
 <div align="center">
 
-## ⭐ THANK YOU FOR VISITING OUR PROJECT ⭐
+# ⭐ THANK YOU FOR VISITING OUR PROJECT ⭐
 
 ### 🎮 “Simple gameplay — Real teamwork experience”
 
 </div>
+```
