@@ -1,20 +1,3 @@
-README hiện tại của bạn đã khá ổn rồi, nhưng đúng là:
-
-* thiếu thành viên Thúy Vương,
-* một vài vai trò chưa sát thực tế,
-* có vài chỗ hơi “template”,
-* chưa thể hiện rõ quá trình teamwork thật,
-* và chưa phản ánh đúng gameplay/code hiện tại.
-
-Mình viết lại theo hướng:
-
-* nhìn chuyên nghiệp kiểu GitHub thật,
-* bám sát đúng project hiện tại,
-* đúng workflow nhóm đã làm,
-* đúng tính năng thật sự đã có,
-* và vẫn đẹp để thầy mở repo lên thấy “có đầu tư”.
-
-````md
 # 🎮 SS004 - TETRIS GAME PROJECT (NHÓM 09)
 
 <div align="center">
